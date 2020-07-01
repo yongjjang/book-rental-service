@@ -61,13 +61,12 @@ def rental():
                                  returndate=return_date, isrentout=True))
                 db_session.flush()
                 db_session.commit()
-            return render_template('/success_or_failed.html', status="Success", description="도서 대출 실행 완료!")
+                return render_template('/success_or_failed.html', status="Success", description="도서 대출 실행 완료!")
         except Exception as ex:
             logging.info(ex)
-        finally:
             return render_template('/success_or_failed.html', status="Failed",
                                    description="대출할  수 없는 도서 또는 사용자입니다.")
-
+            
 
 @rent.route('/check', methods=['POST'])
 def check_valid():
