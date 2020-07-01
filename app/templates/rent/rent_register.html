@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+  {% block title %}도서 대출{% endblock %}
+{% endblock %}
+
+{% block content %}
+<script>
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+})
+</script>
+
+<div class="container" id="rentalForm">
+    <form action="{{ url_for('rent.rental') }}" method="post">
+        <div class="form-group col-md-8 row">
+            <label for="inputISBN">ISBN</label>
+            <input type="text" class="form-control col-md-8" id="inputISBN" name="isbn" placeholder="Book's ISBN" required>
+            <button type="button" class="btn bmd-btn-icon" onclick="searchISBN()"  for="search" data-toggle="modal" data-target="#bookNameModal">
+                <i class="material-icons">search</i>
+            </button>
+
+        </div>
+
+        <div class="form-group col-md-8 row">
+            <label for="inputUserName">UserName</label>
+            <input type="text" class="form-control col-md-8" id="inputUserName" name="username" placeholder="사용자 이름" required>
+            <button type="button" class="btn bmd-btn-icon" for="search" data-toggle="modal" data-target="#userNameModal">
+                <i class="material-icons">search</i>
+            </button>
+        </div>
+
+        <div class="form-group col-md-8 row">
+            <label for="inputBD">Birthday</label>
+            <input type="date" class="form-control col-md-8" id="inputBD" name="birthday" placeholder="Birthday" required>
+        </div>
+
+        <button id="rentBook" type="submit" class="btn btn-outline-primary">Rent Book!</button>
+    </form>
+</div>
+
+<div class="modal fade" id="bookNameModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Book List</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="searchBookTable" class="modal-body">
+        입력한 ISBN와 일치하는 패턴을 가진 도서 리스트 표시할 예정
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="modal fade" id="userNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="searchUserTable" class="modal-body">
+        입력한 이름, 생년월일과 일치하는 패턴을 가진 사용자 리스트 표시할 예정
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+        <script>
+    function btnDisable() {
+        document.getElementById('rentBook').disabled = true
+    }
+
+    function checkValid() {
+        let checkDuplicateBook = true;
+        let registerBook = document.getElementById('registerBook');
+        let isbn = document.getElementById('inputISBN')
+
+        if (isbn == ''){
+            alert('ISBN을 입력하세요');
+        } else {
+            const jsonData = {
+                isbn: isbn.value
+            };
+            console.log(isbn.value)
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const result = JSON.parse(xhr.responseText);
+                    console.log(xhr.responseText);
+                    if (result.existence === "false") {
+                        alert('등록 가능한 도서 정보입니다.');
+                        checkDuplicateBook = true;
+                    } else {
+                        alert('이미 등록된 도서입니다.');
+                        checkDuplicateBook = false;
+                    }
+                    registerBook.disabled = !checkDuplicateBook;
+                }
+            }
+            xhr.open('post', '{{ url_for('book.check_valid') }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(jsonData));
+        }
+        }
+{#    <script>#}
+{##}
+{#    birthday = document.getElementById('inputBirthday');#}
+{#    username = document.getElementById('inputUserName');#}
+{#    let result = JSON.parse(xhr.responseText);#}
+{##}
+{#    function searchISBN() {#}
+{#        let isbn = document.getElementById('inputISBN');#}
+{#        let bookSearchTable = document.getElementById('searchBookTable');#}
+{#        if (isbn == ''){#}
+{#            alert('ISBN을 입력하세요');#}
+{#        } else {#}
+{#            const jsonData = {#}
+{#                isbn: isbn.value#}
+{#            };#}
+{#            const xhr = new XMLHttpRequest();#}
+{#            xhr.onreadystatechange = function () {#}
+{#                if (xhr.readyState === 4 && xhr.status === 200) {#}
+{#                    result = JSON.parse(xhr.responseText);#}
+{#                    bookSearchTable.innerHTML = "";#}
+{#                    bookSearchTable.innerHTML += "<table class=\"table table-bordered table-striped table-hover\">";#}
+{#                    bookSearchTable.innerHTML += "<tr><th>Book Name</th><th>Author</th></tr>";#}
+{##}
+{#                    bookSearchTable.innerHTML += "<tr><td>";#}
+{#                    bookSearchTable.innerHTML += result.bookName;#}
+{#                    bookSearchTable.innerHTML += "</td><td>";#}
+{#                    bookSearchTable.innerHTML += result.author;#}
+{#                    bookSearchTable.innerHTML += "</td></tr>";#}
+{#                    bookSearchTable.innerHTML += "</table>";#}
+{##}
+{#                } else {#}
+{#                    bookSearchTable.innerHTML += "ISBN과 일치하는 도서 정보가 없습니다.";#}
+{#                }#}
+{#            }#}
+{##}
+{#        xhr.open('post', '{{ url_for('book.get_json_book') }}', true);#}
+{#        xhr.setRequestHeader('Content-Type', 'application/json');#}
+{#        xhr.send(JSON.stringify(jsonData));#}
+{#        }#}
+{#    }#}
+
+
+    </script>
+{% endblock %}

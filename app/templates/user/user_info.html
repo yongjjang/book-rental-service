@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {% block title %}사용자 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+    {%  if not is_valid %}
+        <h2> </h2>
+        <h2>찾고 계신 사용자가 존재하지 않습니다.</h2>
+        <a href="/">돌아가기</a>
+    {% else %}
+
+    <div class="container">
+        <div class="row justify-content-md-center align-items-center">
+            <div class="col-md-4">
+                {#                <img src="{{ entry[6] }}" class="img-thumbnail" alt="response images"/>#}
+                <img alt="response image" class="img-thumbnail" src="static/images/testImage.jpg"/>
+            </div>
+            <div class="col-md-4 align-items-center">
+                <div class="row justify-content-md-center">
+
+                    <div class="col-md-7 align-items-center">
+                        <table class="table ">
+                            <thead class="thead-light">
+                            <th class="text-center">Name</th>
+                            </thead>
+                            <tbody>
+                            <td class="text-center" id="username">{{ entry.name }}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-auto align-items-center">
+                        <table class="table ">
+                            <thead class="thead-light">
+                            <th class="text-center">Gender</th>
+                            </thead>
+                            <tbody>
+                            <td class="text-center">{{ entry.gender }}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12 align-items-center">
+                    <table class="table ">
+                        <thead class="thead-light">
+                        <th class="text-center">Tel</th>
+                        </thead>
+                        <tbody>
+                        <td id="telno" class="text-center">{{ entry.telno }}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4 align-items-center">
+                <table class="table">
+                    <thead class="thead-light">
+                    <th class="text-center">E-Mail</th>
+                    </thead>
+                    <tbody>
+                    <td class="text-center">{{ entry.email }}</td>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4 align-items-center">
+                <table class="table">
+                    <thead class="thead-light">
+                    <th class="text-center">Birthday</th>
+                    </thead>
+                    <tbody>
+                    <td class="text-center" id="birthday">{{ entry.birthday }}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row justify-content-md-center align-items-center" >
+            <div class="col-md-6 align-items-center text-center text-primary">
+                <a id="rentInfo" ></a>
+            </div>
+            <div class="col-md-2 align-items-center">
+                <button href="#" id="btn" onclick="deleteUser()" class="btn btn-danger btn-sm active float-sm-right"  aria-pressed="true">Delete
+                    User!</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    checkRent();
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+    function checkRent() {
+        console.log("Hi");
+        var status = "{{ entry.canrent }}";
+
+        var btn;
+        if (status == "True") {
+            btn = document.getElementById('btn');
+            document.getElementById('rentInfo').innerHTML = "책을 대여중이지 않습니다.";
+            btn.disabled = false;
+            console.log("T");
+
+        } else {
+            btn = document.getElementById('btn');
+            btn.disabled = 'disabled';
+            document.getElementById('rentInfo').innerHTML = "사용자가 책을 대여중이기 때문에 삭제할 수 없습니다.";
+            console.log("F");
+
+        }
+    }
+
+    function deleteUser() {
+        let username = document.getElementById('username').innerHTML;
+        let birthday = document.getElementById('birthday').innerHTML;
+
+        post_to_url('{{ url_for('user.delete') }}', {'username': username, 'birthday': birthday});
+
+    }
+
+    </script>
+{% endblock%}

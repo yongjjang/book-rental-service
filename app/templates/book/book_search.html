@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+<link
+{% block header %}
+    {% block title %}도서 목록 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="form-row justify-content-md-center">
+            <div class="col"></div>
+            <form class="form-inline align-self-center col-md-8" action="/book/info" method="post">
+                <div class=" form-group col-md-3 ">
+                    <label>Book Name</label>
+                    <input class="form-control col-auto" name="bookname" type="text" placeholder="Enter Book's Name"/>
+                </div>
+                <div class=" form-group col-md-3 offset-md-1">
+                    <label>Book Author</label>
+                    <input class="form-control col-auto" name="author" type="text" placeholder="Enter Book's Author"/>
+                </div>
+                <div class="form-group col-md-2  align_items_bottom offset-md-1">
+                    <input class="btn btn-outline-primary" type="submit" value="Submit">
+                </div>
+            </form>
+            <div class="col"></div>
+        </div>
+    </div>
+
+
+    <table class="table table-bordered table-striped table-hover">
+        <tr>
+            {% for col in table_head %}
+                <th class="text-center">{{ col }}</th>
+            {% endfor %}
+
+        </tr>
+        {% for item in items %}
+            <tr>
+                {% for i in range(length_item) %}
+                    <td class="text-center">{{ item[i] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

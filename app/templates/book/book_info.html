@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+    {% block title %}도서 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+    {% if not is_valid %}
+        <h2></h2>
+        <h2>찾고 계신 도서가 존재하지 않습니다.</h2>
+        <a href="/">돌아가기</a>
+    {% else %}
+
+        <div class="container">
+            <div class="row justify-content-md-center align-items-center">
+                <div class="col-md-4">
+                    <img alt="response image" class="img-thumbnail" src="static/images/testImage.jpg"/>
+                    {# <img src="{{ entry[7] }}" class="img-thumbnail" alt="response images"/>#}
+                </div>
+                <div class="col-md-4 align-items-center">
+                    <div class="col-md-12 align-items-center">
+                        <table class="table ">
+                            <thead class="thead-light">
+                            <th class="text-center">Name</th>
+                            </thead>
+                            <tbody>
+                            <td class="text-center">{{ entry.name }}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12 align-items-center">
+                        <table class="table ">
+                            <thead class="thead-light">
+                            <th class="text-center">Author</th>
+                            </thead>
+                            <tbody>
+                            <td class="text-center">{{ entry.author }}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12 align-items-center">
+                        <table class="table">
+                            <thead class="thead-light">
+                            <th class="text-center">ISBN</th>
+                            </thead>
+                            <tbody>
+                            <td id="isbn" class="text-center">{{ entry.isbn }}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-4 align-items-center">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <th class="text-center">Link</th>
+                        </thead>
+                        <tbody>
+                        <td  id="isbn" class="text-center"><a href="http://{{ entry.link }} ">{{ entry.link }}</a></td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 align-items-center">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <th class="text-center">Price</th>
+                        </thead>
+                        <tbody>
+                        <td class="text-center">{{ entry.price }}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col-md-8 align-items-center">
+                    <table class="table ">
+                        <thead class="thead-light">
+                        <th class="text-center">Description</th>
+                        </thead>
+                        <tbody>
+                        <td class="text-center">{{ entry.description }}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col-md-6 align-items-center text-center text-primary">
+                    <a id="rentInfo" class="text-primary"></a>
+                </div>
+                <div class="col-md-2 align-items-center">
+                    <button href="#" onclick="deleteBook()" id="btn" class="btn btn-danger btn-sm active float-sm-right" aria-pressed="true">
+                        Delete
+                        Book!
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script>checkRent()</script>
+    {% endif %}
+
+{% endblock %}
+
+{% block script %}
+<script>
+    function checkRent() {
+        console.log("Hi");
+        var status = "{{ entry.isrentedout }}";
+        console.log(status);
+        var btn;
+        if (status == "False") {
+            btn = document.getElementById('btn');
+            document.getElementById('rentInfo').innerHTML = "대여 가능";
+            btn.disabled = false;
+            console.log("T");
+
+        } else {
+            btn = document.getElementById('btn');
+            btn.disabled = 'disabled';
+            document.getElementById('rentInfo').innerHTML = "대여 불가";
+            console.log("F");
+        }
+    }
+
+
+
+    function deleteBook() {
+        console.log("Hi")
+        let isbn = document.getElementById('isbn').innerHTML;
+        post_to_url('{{ url_for('book.delete') }}', {'isbn': isbn});
+    }
+</script>
+{% endblock %}

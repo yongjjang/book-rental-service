@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+    {% block title %}사용자 목록 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="form-row justify-content-md-center align-items-end">
+            <div class="col"></div>
+            <form class="form-inline align-self-center col-md-8" action="{{ url_for('user.info') }}" method="post">
+                <div class=" form-group col-md-3 ">
+                    <label>User Name</label>
+                    <input class="form-control " name="username" type="text"
+                           placeholder="Enter User Name"/>
+                </div>
+                <div class="form-group col-md-4 offset-1 ">
+                    <label>User's Birthday</label>
+                    <input type="date" class="form-control" id="inputBirthday" name="birthday"
+                           placeholder="" required/>
+                </div>
+                <input class="btn btn-outline-primary" type="submit" value="Submit">
+            </form>
+            <div class="col"></div>
+        </div>
+
+    </div>
+
+
+    <table class="table table-bordered table-striped table-hover ">
+        <tr>
+            {% for col in table_head %}
+                <th class="text-center">{{ col }}</th>
+            {% endfor %}
+
+        </tr>
+        {% for item in items %}
+            <tr>
+                {% for i in range(length_item) %}
+                    <td class="text-center">{{ item[i] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

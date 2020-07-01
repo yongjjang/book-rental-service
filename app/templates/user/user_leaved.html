@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+    {% block title %}탈퇴한 사용자 목록 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+        <table class="table table-bordered table-striped table-hover ">
+        <tr>
+            {% for col in table_head %}
+                <th class="text-center">{{ col }}</th>
+            {% endfor %}
+
+        </tr>
+        {% for item in items %}
+            <tr>
+                {% for i in range(length_item) %}
+                    <td class="text-center">{{ item[i] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

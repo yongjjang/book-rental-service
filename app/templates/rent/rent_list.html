@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+  {% block title %}도서 대출 현황{% endblock %}
+{% endblock %}
+
+{% block content %}
+   <table class="table table-bordered table-striped table-hover ">
+        <tr>
+            {% for col in table_head %}
+                <th class="text-center">{{ col }}</th>
+            {% endfor %}
+        <th class="text-center">Return Book!</th>
+        </tr>
+
+        {% for item in items %}
+            <div">
+            <tr>
+                <td id="id" class="text-center">{{ item.id }}</td>
+                <td id="userid" class="text-center">{{ item.userid }}</td>
+                <td id="bookid" class="text-center">{{ item.bookid }}</td>
+                <td id="rentaldate" class="text-center">{{ item.rentaldate }}</td>
+                <td id="returndate" class="text-center">{{ item.returndate }}</td>
+                <td id="isrentout" class="text-center">{{ item.isrentout }}</td>
+                <td><div><button id="{{ item.id }}" class="btn btn-outline-primary" onclick="bookReturn(this.id)">Return Book!</button></div></td>
+            </tr>
+            </div>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+
+{% block script %}
+        <script>
+    function btnDisable() {
+        document.getElementById('rentBook').disabled = true
+    }
+
+    function checkValid() {
+        let checkDuplicateBook = false;
+        let registerBook = document.getElementById('registerBook');
+        let isbn = document.getElementById('inputISBN')
+
+        if (isbn == ''){
+            alert('ISBN을 입력하세요');
+        } else {
+            const jsonData = {
+                isbn: isbn.value
+            };
+            console.log(isbn.value)
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const result = JSON.parse(xhr.responseText);
+                    console.log(xhr.responseText);
+                    if (result.existence === "false") {
+                        alert('등록 가능한 도서 정보입니다.');
+                        checkDuplicateBook = true;
+                    } else {
+                        alert('이미 등록된 도서입니다.');
+                        checkDuplicateBook = false;
+                    }
+                    registerBook.disabled = !checkDuplicateBook;
+                }
+            }
+            xhr.open('post', '{{ url_for('book.check_valid') }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(jsonData));
+        }
+    }
+
+
+    function bookReturn(clickedId){
+        post_to_url('{{ url_for('rent.book_return') }}', {'id':clickedId})
+    }
+
+
+
+
+    </script>
+{% endblock %}

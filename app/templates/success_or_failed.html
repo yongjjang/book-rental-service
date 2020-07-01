@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+    {% block title %}도서 조회{% endblock %}
+{% endblock %}
+
+{% block content %}
+{% if status == "Success" %}
+<div class="card jumbotron info">
+    <h1 class="display-4">Success!</h1>
+    <p class="lead">{{ description }}</p>
+    <hr class="my-4"/>
+    <a class="btn btn-primary btn-lg float-left" href="/" role="button">시작 화면으로 가기</a>
+
+</div>
+{% else %}
+<div class="card jumbotron info">
+    <h1 class="display-4">Failed..</h1>
+    <p class="lead">{{ description }}</p>
+    <hr class="my-4"/>
+    <a class="btn btn-primary btn-lg float-left" href="/" role="button">시작 화면으로 가기</a>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
