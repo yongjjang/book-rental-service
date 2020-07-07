@@ -15,7 +15,7 @@ class Book(base):
     description = Column(String(40))
     link = Column(String(100))
     picturepath = Column(String(60))
-    isrentedout = Column(Boolean(), default=True)
+    isrentedout = Column(Boolean(), default=False)
     column_list = ['ID', 'ISBN', 'Name', 'Author', 'Price', 'Description', 'link', 'Picture', 'Is Rent Out?']
 
     def __init__(self, id, isbn, name, author, price, description, link, picture_path, isrentedout):
