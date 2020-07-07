@@ -11,7 +11,7 @@ create table book
 	Description char(40) null,
 	Link char(100) null,
 	PicturePath char(100) null,
-	IsRentedOut tinyint(1) default 1 not null,
+	IsRentedOut tinyint(1) default 0 not null,
 	constraint book_ISBN_uindex
 		unique (ISBN)
 );
@@ -37,7 +37,7 @@ create table bookrental
 	BookId int not null,
 	RentalDate date null,
 	ReturnDate date null,
-	isRentOut tinyint(1) default 0 null,
+	isRentOut tinyint(1) default 0 not null,
 	constraint BookRental_book_ISBN_fk
 		foreign key (BookId) references book (id),
 	constraint bookrental_user_Name_fk
