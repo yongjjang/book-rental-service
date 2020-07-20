@@ -1,5 +1,19 @@
 version: '3'
 services:
+  db: 
+    image: mysql:8.0.17 
+    container_name: db # 컨테이너 이름 설정
+    volumes:
+      - ./datadir:/var/lib/mysql
+    ports:
+      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    environment: # -e 옵션
+      MYSQL_ROOT_PASSWORD: "q"  # MYSQL 패스워드 설정 옵션
+      TZ: "Asia/Seoul"
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
   web:
     volumes:
       - ./app:/app
